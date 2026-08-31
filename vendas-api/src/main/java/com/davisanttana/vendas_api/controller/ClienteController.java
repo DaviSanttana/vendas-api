@@ -40,6 +40,9 @@ public class ClienteController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long id, @Valid @RequestBody Cliente clienteAtualizado) {
+        if (clienteRepository.existsByCpfAndIdNot(clienteAtualizado.getCpf(), id)) {
+            throw new CpfDuplicadoException(clienteAtualizado.getCpf());
+        }
         return clienteRepository.findById(id)
                 .map(clienteExistente -> {
                     clienteExistente.setNome(clienteAtualizado.getNome());
