@@ -1,6 +1,7 @@
 package com.davisanttana.vendas_api.exception;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -37,7 +39,6 @@ public class GlobalExceptionHandler {
         return erros;
     }
 
-
     @ExceptionHandler(CpfDuplicadoException.class)
     public ResponseEntity<Map<String, String>> lidarComCpfDuplicado(CpfDuplicadoException ex) {
         Map<String, String> erro = new HashMap<>();
@@ -50,6 +51,14 @@ public class GlobalExceptionHandler {
         Map<String, String> erro = new HashMap<>();
         erro.put("erro", "Não foi possível salvar: dado duplicado ou restrição do banco violada.");
         return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> lidarComErroGenerico(Exception ex) {
+        log.error("Erro não tratado", ex);
+        Map<String, String> erro = new HashMap<>();
+        erro.put("erro", "Erro interno no servidor");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
     }
 
 }
