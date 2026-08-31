@@ -1,6 +1,7 @@
 package com.davisanttana.vendas_api.controller;
 
 
+import com.davisanttana.vendas_api.exception.CpfDuplicadoException;
 import com.davisanttana.vendas_api.model.Cliente;
 import com.davisanttana.vendas_api.repository.ClienteRepository;
 import jakarta.validation.Valid;
@@ -24,6 +25,9 @@ public class ClienteController {
 
     @PostMapping
     public Cliente criarClientes(@Valid @RequestBody Cliente cliente){
+        if (clienteRepository.existsByCpf(cliente.getCpf())){
+            throw new CpfDuplicadoException(cliente.getCpf());
+        }
         return clienteRepository.save(cliente);
     }
 
