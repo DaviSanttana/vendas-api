@@ -38,16 +38,17 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(CpfDuplicadoException.class)
+    public ResponseEntity<Map<String, String>> lidarComCpfDuplicado(CpfDuplicadoException ex) {
+        Map<String, String> erro = new HashMap<>();
+        erro.put("cpf", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, String>> lidarComViolacaoDeIntegridade(DataIntegrityViolationException ex) {
         Map<String, String> erro = new HashMap<>();
-
-        if (ex.getMessage().contains("CPF")) {
-            erro.put("erro", "Não foi possível realizar o cadastro. Verifique se os dados estão corretos.");
-        } else {
-            erro.put("erro", "Erro ao processar as informações enviadas.");
-        }
-
+        erro.put("erro", "Não foi possível salvar: dado duplicado ou restrição do banco violada.");
         return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
     }
 
