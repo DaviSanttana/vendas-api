@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/clientes")
 public class ClienteController {
-
     @Autowired
     private ClienteRepository clienteRepository;
 
@@ -63,6 +62,7 @@ public class ClienteController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+
     }
 
 
