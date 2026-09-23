@@ -7,6 +7,7 @@ import com.davisanttana.vendas_api.model.Venda;
 import com.davisanttana.vendas_api.repository.ClienteRepository;
 import com.davisanttana.vendas_api.repository.ProdutoRepository;
 import com.davisanttana.vendas_api.repository.VendasRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class VendaController {
         return vendasRepository.findAll();
     }
 
-
+    @Transactional
     @PostMapping
     public ResponseEntity<Venda> realizarVenda(@RequestBody VendaRequestDTO request) {
         if (request.clienteId() == null || request.produtosIds() == null || request.produtosIds().isEmpty()) {
