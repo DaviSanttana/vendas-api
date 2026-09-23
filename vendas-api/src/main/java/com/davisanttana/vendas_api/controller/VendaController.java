@@ -35,6 +35,10 @@ public class VendaController {
 
     @PostMapping
     public ResponseEntity<Venda> realizarVenda(@RequestBody VendaRequestDTO request) {
+        if (request.clienteId() == null || request.produtosIds() == null || request.produtosIds().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
         Cliente cliente = clienteRepository.findById(request.clienteId())
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado com ID: " + request.clienteId()));
 
