@@ -48,6 +48,15 @@ public class VendaController {
             return ResponseEntity.badRequest().build();
         }
 
+        for (Produto produto : produtos) {
+            if (produto.getQuantidadeEstoque() <= 0) {
+                throw new RuntimeException("Produto sem estoque: " + produto.getNome());
+            }
+
+            produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() - 1);
+            produtoRepository.save(produto);
+        }
+
         BigDecimal valorTotal = produtos.stream()
                 .map(Produto::getPreco)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
